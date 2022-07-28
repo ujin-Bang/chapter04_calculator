@@ -16,6 +16,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1" />
 
+    <TextView
+        android:id="@+id/expressionTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="44dp"
+        android:textSize="30sp"
+        android:layout_marginStart="15dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="end"
+        android:layout_marginEnd="15dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/resultTextView"
+        app:layout_constraintBottom_toTopOf="@id/keypadTableLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:gravity="end"
+        android:textSize="20sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:textColor="#aaaaaa"
+        android:layout_height="wrap_content"/>
+
     <TableLayout
         android:id="@+id/keypadTableLayout"
         android:layout_width="0dp"
@@ -49,6 +77,7 @@
                 android:background="@drawable/button_background"
                 android:enabled="false"
                 android:clickable="false"
+                android:textColor="@color/green"
                 android:stateListAnimator="@null"
                 android:text="()"
                 android:textSize="24sp" />
@@ -260,12 +289,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="7dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/result_button_background"
                 android:onClick="resultButtonClicked"
                 android:stateListAnimator="@null"
                 android:text="="
                 android:textSize="24sp"
-                android:textColor="@color/green"/>
+                android:textColor="@color/white"/>
 
         </TableRow>
 
