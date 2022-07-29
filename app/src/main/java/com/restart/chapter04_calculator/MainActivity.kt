@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.room.Room
+import com.restart.chapter04_calculator.model.History
 
 class MainActivity : AppCompatActivity() {
     //텍스트뷰 지연초기화
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.historyLinearLayout)
     }
 
-
+    lateinit var db: AppDatabase
 
     //연산자 예외처리를 위한 변수 초기화
     private var isOperator = false
@@ -42,7 +43,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        //lateinit var db 초기화 하기
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "historyDB"
+        ).build()
     }
 
     //xml에 onClick속성으로 연결한 태그의 id값으로 가져오기.
@@ -154,6 +160,12 @@ class MainActivity : AppCompatActivity() {
 
         val expressionText = expressionTextView.text.toString()
         val resultText = calculateExpression()
+
+        //todo 디비에 넣어주는 부분
+        // db와 관련된 과정은 메인쓰레드가 아니라 새로운 쓰레드에서 해야함.어떤 쓰레드가 먼저 실행될지는 알 수 없음.
+        Thread(Runnable {
+            db.historyDao().insertHistory(History(null,expressionText, resultText))
+        }).start()
 
         resultTextView.text = ""
         expressionTextView.text = resultText
