@@ -6,8 +6,10 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
     //텍스트뷰 지연초기화
@@ -17,6 +19,14 @@ class MainActivity : AppCompatActivity() {
 
     private val resultTextView: TextView by lazy {
         findViewById(R.id.resultTextView)
+    }
+
+    private val historyLayout: View by lazy {
+        findViewById(R.id.historyLayout)
+    }
+
+    private val historyLinearLayout: LinearLayout by lazy {
+        findViewById(R.id.historyLinearLayout)
     }
 
     //연산자 예외처리를 위한 변수 초기화
@@ -182,6 +192,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun historyButtonClicked(v: View) {
+
+        historyLayout.isVisible = true
+
+        //todo 디비에서 모든 기록가져오기
+        //todo 뷰에 모든 기록 할당하기
+    }
+
+    fun closeHistoryButtonClicked(v: View){
+        historyLayout.isVisible = false
+    }
+
+    fun historyClearButtonClicked(v: View){
+        //todo 디비에서 모든 기록 삭제
+        //todo 뷰에서 모든 기록 삭제
 
     }
 
