@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.room.Room
 
 class MainActivity : AppCompatActivity() {
     //텍스트뷰 지연초기화
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.historyLinearLayout)
     }
 
+
+
     //연산자 예외처리를 위한 변수 초기화
     private var isOperator = false
 
@@ -38,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
     }
 
     //xml에 onClick속성으로 연결한 태그의 id값으로 가져오기.
