@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.room.Room
 import com.restart.chapter04_calculator.model.History
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
     //텍스트뷰 지연초기화
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             //오퍼레이터를 눌렀는데 다른 기능의 오퍼레이터를 다시누를 경우 ( ex) +를 누르고 -를 누름)
             isOperator -> {
                 val text = expressionTextView.text.toString()
-                expressionTextView.text = text.dropLast(1) + operator
+                expressionTextView.text = text.dropLast(1) + operator //텍스트마지막자리에서 -1을 빼고 오퍼레이터를 더한다.
 
             }
             //오퍼레이터를 한번만 사용할 수 있게
@@ -210,10 +212,33 @@ class MainActivity : AppCompatActivity() {
 
     fun historyButtonClicked(v: View) {
 
+        //히스토리 레이아웃 보이게 (백그라운드를 화이트로 지정해 주어서 뒤에 버튼패드들이 가려지는 효과)
         historyLayout.isVisible = true
 
         //todo 디비에서 모든 기록가져오기
         //todo 뷰에 모든 기록 할당하기
+
+        historyLinearLayout.removeAllViews() //리니어 레이아웃 하위의 모든 뷰 삭제됨.
+
+        //db연결 쓰레드만들기 => 메인쓰레드로 연결 runOnUiThread
+        Thread(Runnable {
+            //db안에 historyDao안에 getAll함수호출 => 최신목록부터 나오도록reversed => 순서대로 꺼내기forEach
+            db.historyDao().getAll().reversed().forEach {
+
+                runOnUiThread { //Main쓰레드와 연결 runOnUiThread
+                    //만들어둔 화면 가져오기
+                    val historyView = LayoutInflater.from(this).inflate(R.layout.history_row, null, false)
+                    //db에 저장해둔 expression값,result값 텍스트뷰의 텍스트로 반영
+                    historyView.findViewById<TextView>(R.id.expressionTextView).text = it.expression
+                    historyView.findViewById<TextView>(R.id.resultTextView).text = "= ${it.result}"
+
+                    //historyLinearLayout에 addView로 만들어둔 historyView 사용.리니어 레이아웃이므로 선형으로 표현됨.
+                    historyLinearLayout.addView(historyView)
+
+                }
+
+            }
+        }).start()
     }
 
     fun closeHistoryButtonClicked(v: View){
@@ -222,7 +247,13 @@ class MainActivity : AppCompatActivity() {
 
     fun historyClearButtonClicked(v: View){
         //todo 디비에서 모든 기록 삭제
+        //db접근 쓰레드로
+        Thread(Runnable{
+            db.historyDao().deleteAll()
+        }).start()
+
         //todo 뷰에서 모든 기록 삭제
+        historyLinearLayout.removeAllViews()
 
     }
 
